@@ -7,7 +7,7 @@ from plot import plotMeasurementsTemperature
 
 folder_path = "Data/inputs/"
 csv_path = "Data/csv/"
-files = [f for f in os.listdir(folder_path) if "cooling" in f]
+files = [f for f in os.listdir(folder_path) if "cooling" in f and f.endswith("xye")]
 measurments = []
 
 for file_name in files:
