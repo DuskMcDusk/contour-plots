@@ -1,25 +1,37 @@
 
-
-from conversion import convertX, convertY
-from parser import parseData
+import os
+from conversion import convertData, convertX, convertY, getColumValues
+from parser import parseData, saveAsCsv
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
 import csv
+from datetime import datetime
+from plot import plotMeasurementsTemperature
 
-data = parseData("Data/inputs/STF_Ni_cooling_f00001.xye")
-max = float("-inf")
-for entry in data:
-    if (entry[1] > max):
-        max = entry[1]
-with open("STF_Ni_cooling_f00001.csv", "w", newline='') as file:
-    field_names = ["2M°", "Normalized Intensity"]
-    writer = csv.DictWriter(file, fieldnames=field_names)
-    writer.writeheader()
-    for entry in data:
-        try: 
-            csv_record = {
-                "2M°": convertX(entry[0]), 
-                "Normalized Intensity": convertY(entry[1], max)
-            }
-            writer.writerow(csv_record)
-        except:
-            print(entry)
-            continue
+
+
+
+folder_path = "Data/inputs/"
+csv_path = "Data/csv/"
+files = [f for f in os.listdir(folder_path) if "cooling" in f]
+measurments = []
+
+for file_name in files:
+    source_path = os.path.join(folder_path,file_name)
+    data, temperature = parseData(source_path)
+    converted_data = convertData(data)
+
+    detination_path = os.path.join(csv_path, file_name.split(".")[0] + ".csv")
+    saveAsCsv(source_path, detination_path, converted_data)
+
+    angles = getColumValues(converted_data, 0)
+    intensities = getColumValues(converted_data, 1)
+    measurments.append({
+        "angles": angles, 
+        "intensities": intensities,
+        "temperature": temperature
+    })
+# add parameter reverse = True if needed
+measurments = sorted(measurments, key=lambda m: m["temperature"])
+plotMeasurementsTemperature(measurments)
