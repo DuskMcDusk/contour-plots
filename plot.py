@@ -1,6 +1,5 @@
 
 from matplotlib import pyplot as plt
-import matplotlib.dates as mdates
 import numpy as np
 
 # measurments is a dictionary {}

@@ -1,16 +1,9 @@
 
 import os
-from conversion import convertData, convertX, convertY, getColumValues
+
+from conversion import convertData, getColumValues
 from parser import parseData, saveAsCsv
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import numpy as np
-import csv
-from datetime import datetime
 from plot import plotMeasurementsTemperature
-
-
-
 
 folder_path = "Data/inputs/"
 csv_path = "Data/csv/"
@@ -23,7 +16,7 @@ for file_name in files:
     converted_data = convertData(data)
 
     detination_path = os.path.join(csv_path, file_name.split(".")[0] + ".csv")
-    saveAsCsv(source_path, detination_path, converted_data)
+    saveAsCsv(detination_path, converted_data)
 
     angles = getColumValues(converted_data, 0)
     intensities = getColumValues(converted_data, 1)

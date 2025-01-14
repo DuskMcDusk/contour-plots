@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 import os
-
+from pathlib import Path
 
 def parseData(filePath):
     results = []
@@ -39,9 +39,11 @@ def getStringValueBetween(line, start, end):
     if endIndex == -1: return
     return line[index:endIndex]
 
-def saveAsCsv(source, dest, converted_data):
+def saveAsCsv(dest, converted_data):
     if os.path.exists(dest):
         return
+    file = Path(dest)
+    file.parent.mkdir(parents=True, exist_ok=True)
     with open(dest, "w", newline='') as file:
         field_names = ["angle", "normalized intensity"]
         writer = csv.DictWriter(file, fieldnames=field_names)
